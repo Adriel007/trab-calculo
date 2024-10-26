@@ -8,7 +8,7 @@
 ---
 
 ## Regressão Logística:
-(Imagem de um gráfico de regressão logística)[https://www.hashtagtreinamentos.com/wp-content/uploads/2022/12/REGRESSAO-LOGISTICA-3.png]
+![Imagem de um gráfico de regressão logística](https://www.hashtagtreinamentos.com/wp-content/uploads/2022/12/REGRESSAO-LOGISTICA-3.png)
 
 ### Dataset:
 Utilizou-se de um dataset encontrado no Kaggle de imagens de ursos, somente algumas imagens de ursos polares, negros e pandas foram utilizadas. O dataset original pode ser acessado clicando [aqui](https://www.kaggle.com/datasets/hoturam/bear-dataset)
