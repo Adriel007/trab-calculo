@@ -4,7 +4,7 @@
 ### 3º Ciclo de Ciência de Dados
 
 ## Regressão Linear:
-![Imagem de um gráfico de regressão linear](https://www.blog.psicometriaonline.com.br//wp-content/uploads/2021/02/reg1-1.png)
+![Imagem de um gráfico de regressão linear](linear-regression-plot.png)
 
 ### Objetivo:
 O objetivo é encontrar a reta que melhor se ajusta aos dados fornecidos a partir do algoritmo de gradiente descendente.
