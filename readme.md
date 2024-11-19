@@ -1,9 +1,16 @@
 # Trabalho de cálculo
-### Adriel Domingues de Souza Andrade, Gabriel Irmão da Pureza
+### Adriel Domingues de Souza Andrade, Gabriel da Pureza Irmão
 ### FATEC Rubens Lara
-### 4º Ciclo de Ciência de Dados
+### 3º Ciclo de Ciência de Dados
 
 ## Regressão Linear:
+![Imagem de um gráfico de regressão linear](https://www.blog.psicometriaonline.com.br//wp-content/uploads/2021/02/reg1-1.png)
+
+### Objetivo:
+O objetivo é encontrar a reta que melhor se ajusta aos dados fornecidos a partir do algoritmo de gradiente descendente.
+
+### Modelo
+Regressão linear de 2º grau e gradiente descendente
 
 ---
 
