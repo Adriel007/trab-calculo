@@ -1,6 +1,26 @@
 import matplotlib.pyplot as plt
+import math as math
+import numpy as np
+import random
 from PIL import Image
-#import tensorflow as tf
+
+debugger = True
+
+if debugger:
+    file = open('debug.txt', 'w')
+    file.write("")
+    file.close()
+
+def debug(localsVar):
+    if debugger:
+        file = open('debug.txt', 'a')
+        text = str(localsVar).split(", ")
+        oldText = open('debug.txt', 'r').read()
+        for i in range(len(text)):
+            if text[i] not in oldText:
+                file.write(text[i] + ", ")
+        file.write("\n")
+        file.close()
 
 paths = {
     'test': {
@@ -21,6 +41,21 @@ paths = {
         'panda': 'panda'
     }
 }
+
+def plot_points(datasetx, datasety, a, b, c, xlabel="X", ylabel="Y", title="Graph with Sigmoid"):
+    plt.scatter(datasetx, datasety, color='blue', label="Data Points")
+
+    sigmoid_values = [sigmoid(a * x**2 + b * x + c) for x in datasetx]
+
+    plt.plot(datasetx, sigmoid_values, color='red', label="Sigmoid Line")
+
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+###################################### TRATAMENTO DE IMAGEM ###############################################
 
 def get_images(path_object, key):
     images = []
@@ -118,8 +153,137 @@ def matrix2img(matrix_BW, filename):
     img.save(filename)
     return True
 
+def matrix2vec(matrix_BW):
+    vector = []
+    for i in range(len(matrix_BW)):
+        for j in range(len(matrix_BW[0])):
+            vector.append(matrix_BW[i][j])
+    return vector
+
+######################################### CALCULO ###################################################
+def sigmoid(x):
+  return 1 / (1 + math.exp(-x))
+
+# Gradientes
+def gradDS2(datasetx, datasety, a, b, c):
+    grad_a = 0
+    grad_b = 0
+    grad_c = 0
+
+    for i in range(len(datasetx)):
+        pred = a * datasetx[i]**2 + b * datasetx[i] + c
+        grad_a += 2 * (pred - datasety[i]) * (datasetx[i]**2)
+        grad_b += 2 * (pred - datasety[i]) * (datasetx[i])
+        grad_c += 2 * (pred - datasety[i])
+
+    return (grad_a, grad_b, grad_c)
+
+# Funções de a, b e c
+def fa_quad(a, b, c, xn):
+    exp = -(a*xn**2 + b*xn + c)
+    exp_term = math.exp(exp)
+    result = xn**2 * exp_term / (1 + exp_term)**2
+    print (exp, exp_term, result)
+    return result
+
+def fb_quad(a, b, c, xn):
+    exp = -(a*xn**2 + b*xn + c)
+    print (exp)
+    exp_term = math.exp(exp)
+    result = xn * exp_term / (1 + exp_term)**2
+    return result
+
+def fc_quad(a, b, c, xn):
+    exp = -(a*xn**2 + b*xn + c)
+    print (exp)
+    exp_term = math.exp(exp)
+    result = exp_term / (1 + exp_term)**2
+    return result
+
+# Gradientes
+def gradDS_logistic_quad(datasetx, datasety, a, b, c):
+    grad_a = 0
+    grad_b = 0
+    grad_c = 0
+    for i in range(len(datasetx)):
+        pred = a * datasetx[i]**2 + b * datasetx[i] + c
+        grad_a += 2 * (datasety[i] - pred) * fa_quad(a, b, c, datasetx[i])
+        grad_b += 2 * (datasety[i] - pred) * fb_quad(a, b, c, datasetx[i])
+        grad_c += 2 * (datasety[i] - pred) * fc_quad(a, b, c, datasetx[i])
+        debug(locals())
+
+    return (grad_a, grad_b, grad_c)
+
+def dist2(x_n, y_n, z_n, x_0, y_0, z_0):
+    return ((x_n - x_0)**2 + (y_n - y_0)**2 + (z_n - z_0)**2)**0.5
+
+def gradDS_quad(datasetx, datasety, a_0, b_0, c_0, tol, lr):
+    a_n = a_0
+    b_n = b_0
+    c_n = c_0
+    
+    a_n1 = 99999999
+    b_n1 = 99999999
+    c_n1 = 99999999
+    
+    i = 0
+
+    while True:
+        grad_a, grad_b, grad_c = gradDS_logistic_quad(datasetx, datasety, a_n, b_n, c_n)
+        a_n1 = a_n - lr * grad_a
+        b_n1 = b_n - lr * grad_b
+        c_n1 = c_n - lr * grad_c
+        i += 1
+        
+        if dist2(a_n1, b_n1, c_n1, a_n, b_n, c_n) <= tol:
+            break
+        else:
+            a_n = a_n1
+            b_n = b_n1
+            c_n = c_n1
+
+    return (i, a_n, b_n, c_n)
+
+################################### USE #################################################
+
+
+########### TRAINING ###########
+x_list = []
+y_list = []
+
+polar = get_images(paths['training'], paths['keys']['polar'])
+black = get_images(paths['training'], paths['keys']['black'])
+
+# 2 FORS PARA DEIXAR ORGANIZADO
+
+for i in range(paths['training']['length']):
+    black_matrix = img2matrix(black[i])
+    black_matrix = resize_image(img2gray(black_matrix), 64, 64)
+    black_matrix = matrix2vec(black_matrix)
+    black_simplified = sum(black_matrix) // len(black_matrix) # SIMPLIFICAÇÃO POR MÉDIA ( RECOMENDADO SERIA ALGO COMO PCA )
+    x_list.append(black_simplified)
+    y_list.append(0)
+
+for i in range(paths['training']['length']):
+    polar_matrix = img2matrix(polar[i])
+    polar_matrix = resize_image(img2gray(polar_matrix), 64, 64)
+    polar_matrix = matrix2vec(polar_matrix)
+    polar_simplified = sum(polar_matrix) // len(polar_matrix) # SIMPLIFICAÇÃO POR MÉDIA ( RECOMENDADO SERIA ALGO COMO PCA )
+    x_list.append(polar_simplified)
+    y_list.append(1)
+
+a_0 = random.uniform(min(x_list), max(x_list)) # Dados aleatorios proximos ao valores do dataset    
+b_0 = random.uniform(min(x_list), max(x_list)) # Dados aleatorios proximos ao valores do dataset    
+c_0 = random.uniform(min(x_list), max(x_list)) # Dados aleatorios proximos ao valores do dataset    
+learning_rate = 0.01
+tolerance = 1e-6
+    
+iterations, a_opt, b_opt, c_opt = gradDS_quad(x_list, y_list, a_0, b_0, c_0, tolerance, learning_rate)
+    
+print (x_list)
+
+plot_points(x_list, y_list, a_opt, b_opt, c_opt, "X", "Y", "Graph of Points")
 
 
 # Mostrar resultado final do pre-processamento de imagem:
-
-#matrix2img(resize_image(img2gray(img2matrix(get_images(paths['training'], paths['keys']['polar'])[0])), 64, 64), 'exemplo.jpg')
+# matrix2img(resize_image(img2gray(img2matrix(get_images(paths['training'], paths['keys']['polar'])[0])), 64, 64), 'exemplo.jpg')
