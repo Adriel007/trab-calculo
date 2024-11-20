@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
-datasetx = [1, 2, 2, 3, 3, 4, 5, 5, 6, 7]
-datasety = [8.3, 14.5, 9, 21.9, 16, 30.1, 36.05, 42.9, 52.4, 38]
+datasetx = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+datasety = [4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256]
 
 def derivadas(datasetx, datasety, a, b, c):
     derivada_a = 0
@@ -41,11 +41,11 @@ def gradiente_descendente(a, b, c, tolerancia, learning_rate):
     return i, x_anterior, y_anterior, z_anterior
 
 
-iteracoes, a_final, b_final, c_final = gradiente_descendente(2, 4, 8, 10**(-16), 0.00001)
+iteracoes, a_final, b_final, c_final = gradiente_descendente(2, 4, 8, 10**(-8), 0.000001)
 print(f"Número de iterações: {iteracoes}, valor final de A: {a_final}, B: {b_final} e C: {c_final}")
 
 
-x_grafico = [i * 0.1 for i in range(71)]
+x_grafico = [i * 0.1 for i in range(161)]
 y_grafico = [a_final * x**2 + b_final * x + c_final for x in x_grafico]
 
 plt.figure(figsize=(10, 6))
