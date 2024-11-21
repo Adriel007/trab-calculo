@@ -21,9 +21,14 @@ Regressão linear de 2º grau e gradiente descendente
 O objetivo é ncontrar a linha sigmoidal que melhor se ajusta aos dados fornecidos a partir do algoritmo de gradiente descendente.
 
 ### Modelo:
-Regressão logística de 2º grau e gradiente descendente
+Regressão logística e gradiente descendente
 
 ### Execução:
 ```bash
-python3 logistic-regression.py
+python3 logistic-regression.py <float learning_rate> <float tolerance>
 ```
+
+---
+
+### Dataset:
+[Dataset breast-cancer Kaggle](https://www.kaggle.com/datasets/marshuu/breast-cancer)
