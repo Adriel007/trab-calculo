@@ -120,9 +120,6 @@ def gradienteDescendente(X, Y, a_0, b_0, tol, lr):
     
     return i, a_n, b_n
 
-def predictY(x, a, b):
-    return sigmoid(a * x + b)
-
 ################################## MÉTRICAS #############################################
 
 # Função para calcular a Acurácia
