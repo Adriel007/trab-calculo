@@ -169,8 +169,8 @@ train_x, train_y, test_x, test_y = getDataset("./breast_cancer.csv", 0.1)
 
 a_0 = 0.1
 b_0 = 0.1
-learning_rate = float(sys.argv[1])
-tolerance = float(sys.argv[2])
+learning_rate = 1e-4
+tolerance = 1e-5
 
 print(f"Learning Rate: {learning_rate} | Tolerance: {tolerance}")
 

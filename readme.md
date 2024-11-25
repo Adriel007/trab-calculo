@@ -15,10 +15,10 @@ Regressão linear de 2º grau e gradiente descendente
 ---
 
 ## Regressão Logística:
-![Imagem de um gráfico de regressão logística](https://www.hashtagtreinamentos.com/wp-content/uploads/2022/12/REGRESSAO-LOGISTICA-3.png)
+![Imagem de um gráfico de regressão logística](logistic-regression-plot.png)
 
 ### Objetivo:
-O objetivo é ncontrar a linha sigmoidal que melhor se ajusta aos dados fornecidos a partir do algoritmo de gradiente descendente.
+O objetivo é encontrar a linha sigmoidal que melhor se ajusta aos dados fornecidos a partir do algoritmo de gradiente descendente.
 
 ### Modelo:
 Regressão logística e gradiente descendente
@@ -27,6 +27,15 @@ Regressão logística e gradiente descendente
 ```bash
 python3 logistic-regression.py <float learning_rate> <float tolerance>
 ```
+
+## Rede Neural:
+![Imagem de um gráfico de regressão linear](neural-network-plot.png)
+
+### Objetivo:
+O objetivo da rede neural é classificar os dados do dataset de cancer de mama, para podermos comparar o resultado com a regressão logistica.
+
+### Modelo
+Rede neural e gradiente descendente
 
 ---
 
