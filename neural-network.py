@@ -2,6 +2,55 @@ import math as math
 import matplotlib.pyplot as plt
 import pandas as pd
 
+# Função para calcular a Acurácia
+def accuracy(dtx, dty, a, b, c, d, k, l):
+    acertos = 0
+    for i in range(len(dtx)):
+        x = dtx[i]
+        y_real = dty[i]
+        u = sigmoid(a * x + b)
+        w = sigmoid(c * u + d)
+        z = sigmoid(k * w + l)
+        y_pred = 1 if z >= 0.5 else 0  # Previsão binária (limiar 0.5)
+        if y_pred == y_real:
+            acertos += 1
+    return acertos / len(dtx)
+
+# Função para calcular o F1 Score
+def f1_score(dtx, dty, a, b, c, d, k, l):
+    tp = 0  # True Positives
+    fp = 0  # False Positives
+    fn = 0  # False Negatives
+
+    for i in range(len(dtx)):
+        x = dtx[i]
+        y_real = dty[i]
+        u = sigmoid(a * x + b)
+        w = sigmoid(c * u + d)
+        z = sigmoid(k * w + l)
+        y_pred = 1 if z >= 0.5 else 0  # Previsão binária (limiar 0.5)
+        
+        if y_pred == 1 and y_real == 1:
+            tp += 1
+        elif y_pred == 1 and y_real == 0:
+            fp += 1
+        elif y_pred == 0 and y_real == 1:
+            fn += 1
+    
+    # Evitar divisão por zero
+    if tp + fp == 0 or tp + fn == 0:
+        return 0
+    
+    precision = tp / (tp + fp)  # Precisão
+    recall = tp / (tp + fn)     # Recall
+    return 2 * (precision * recall) / (precision + recall)  # F1 Score
+
+def sigmoid(x):
+    return 1/(1+math.exp(-x))
+
+def derivada_da_sigmoid(x):
+    return sigmoid(x) * (1 - sigmoid(x))
+
 #normaliza os dados para diminuar a escala e torná-los comparáveis
 def normalizar(dado):
     media = sum(dado)/len(dado)
@@ -9,12 +58,6 @@ def normalizar(dado):
     raiz = variancia**0.5
     dado_normalizado = [(x - media) / raiz for x in dado]
     return dado_normalizado
-
-def sigmoid(x):
-    return 1/(1+math.exp(-x))
-
-def derivada_da_sigmoid(x):
-    return sigmoid(x) * (1 - sigmoid(x))
 
 #calculando as derivadas de cada coeficiente da rede neural
 def derivadas(datasetx, datasety, a, b, c, d, k, l):
@@ -99,7 +142,10 @@ datasety = dados['Class'].tolist()
 
 
 iteracoes, a_final, b_final, c_final, d_final, k_final, l_final = gradiente_descendente(0.1, 0.1, 2, 5, 8, 0.1, 10**(-4), 0.1)
-print(f"Número de iterações realizadas: {iteracoes}\n Coeficientes finais\n A: {a_final}\n B: {b_final}\n C: {c_final}\n D: {d_final}\n K: {k_final}\n L: {l_final}")
+acc = accuracy(datasetx, datasety, a_final, b_final, c_final, d_final, k_final, l_final)
+f1 = f1_score(datasetx, datasety, a_final, b_final, c_final, d_final, k_final, l_final)
+
+print(f"Número de iterações realizadas: {iteracoes}\n Coeficientes finais\n A: {a_final}\n B: {b_final}\n C: {c_final}\n D: {d_final}\n K: {k_final}\n L: {l_final} \n\n Acurácia: {acc:.2f}\n f1 score:{f1:.2f}")
 
 # Gerar a predição final usando os coeficientes ajustados
 predicoes = []
